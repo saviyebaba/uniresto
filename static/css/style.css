@@ -1,0 +1,151 @@
+
+/* 
+   UniResto - High-End Design System 
+   Modern Luxury Glassmorphism Edition
+*/
+
+:root {
+    --primary: #4f46e5;
+    --primary-glow: rgba(79, 70, 229, 0.4);
+    --secondary: #0f172a;
+    --accent: #10b981;
+    --glass: rgba(255, 255, 255, 0.9);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --shadow: 0 20px 25px -5px rgba(0,0,0,0.05), 0 10px 10px -5px rgba(0,0,0,0.02);
+}
+
+body {
+    background-color: #fafafa;
+    background-image: 
+        radial-gradient(at 0% 0%, rgba(79, 70, 229, 0.05) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.03) 0px, transparent 50%);
+    color: var(--secondary);
+    font-family: 'Outfit', sans-serif;
+    line-height: 1.5;
+}
+
+.glass-nav {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.uniresto-card {
+    background: #ffffff;
+    border-radius: 1.5rem;
+    border: 1px solid rgba(226, 232, 240, 0.6);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.uniresto-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow);
+    border-color: rgba(79, 70, 229, 0.2);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
+    color: white;
+    font-weight: 800;
+    border-radius: 1rem;
+    padding: 0.7rem 1.4rem;
+    box-shadow: 0 8px 20px -6px var(--primary-glow);
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+    box-shadow: 0 12px 25px -6px var(--primary-glow);
+}
+
+.input-fancy {
+    background: #f8fafc;
+    border: 1.5px solid #f1f5f9;
+    border-radius: 1rem;
+    padding: 0.8rem 1.2rem;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.input-fancy:focus {
+    border-color: var(--primary);
+    background: white;
+    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.06);
+    outline: none;
+}
+
+.metric-container {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 1.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.metric-value {
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--secondary);
+    letter-spacing: -0.04em;
+}
+
+.badge {
+    padding: 0.3rem 0.7rem;
+    border-radius: 1rem;
+    font-size: 0.6rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.badge-success { background: #ecfdf5; color: #059669; border: 1px solid #d1fae5; }
+.badge-warning { background: #fffbeb; color: #d97706; border: 1px solid #fef3c7; }
+
+@keyframes entrance {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-entrance {
+    animation: entrance 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Compact Ticket Styling */
+.ticket-dashed {
+    border-bottom: 2px dashed #f1f5f9;
+    position: relative;
+    padding-bottom: 1.5rem;
+}
+
+.ticket-dashed::before, .ticket-dashed::after {
+    content: '';
+    position: absolute;
+    bottom: -9px;
+    width: 18px;
+    height: 18px;
+    background: #fafafa;
+    border-radius: 50%;
+    border: 1px solid rgba(226, 232, 240, 0.6);
+}
+.ticket-dashed::before { left: -10px; }
+.ticket-dashed::after { right: -10px; }
+
+.qr-container {
+    background: white;
+    padding: 0.75rem;
+    border-radius: 1.25rem;
+    box-shadow: 0 4px 12px -2px rgba(0,0,0,0.05);
+    border: 1px solid rgba(79, 70, 229, 0.05);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.qr-container:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 24px -4px rgba(79, 70, 229, 0.15);
+}

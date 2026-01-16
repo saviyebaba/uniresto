@@ -1,0 +1,72 @@
+
+{% extends "base.html" %}
+{% block content %}
+<div class="space-y-12 animate-entrance">
+    <!-- Title -->
+    <div class="flex flex-col md:flex-row justify-between items-end gap-6">
+        <div class="max-w-2xl">
+            <h2 class="text-6xl font-black text-slate-900 tracking-tighter leading-none">Menu du Jour<span class="text-indigo-600">.</span></h2>
+            <p class="text-slate-500 font-bold mt-4 text-xl">Choisissez votre repas et réservez votre ticket.</p>
+        </div>
+        <div class="flex space-x-2 bg-slate-100 p-1.5 rounded-2xl border border-slate-200 shadow-inner">
+            <a href="{{ url_for('dashboard') }}" class="px-8 py-3 bg-white text-indigo-600 rounded-xl font-black text-xs shadow-sm">À la carte</a>
+            <a href="{{ url_for('my_tickets') }}" class="px-8 py-3 text-slate-500 hover:text-slate-900 rounded-xl font-bold text-xs transition-all">Mes Billets</a>
+        </div>
+    </div>
+
+    <!-- Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {% for menu in menus %}
+        {% set slot_key = menu.date_menu.strftime('%Y-%m-%d') ~ "_" ~ menu.type_repas %}
+        {% set is_conflict = slot_key in booked_slots %}
+        
+        <div class="uniresto-card group overflow-hidden {% if is_conflict %}opacity-60 grayscale-[0.4]{% endif %}">
+            <div class="h-56 bg-slate-100 overflow-hidden relative">
+                {% if menu.image_url %}
+                <img src="{{ menu.image_url }}" alt="{{ menu.type_repas }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                {% else %}
+                <div class="w-full h-full flex items-center justify-center bg-indigo-50 text-indigo-200">
+                    <svg class="w-20 h-20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.247 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+                </div>
+                {% endif %}
+                <div class="absolute top-4 left-4">
+                    <span class="badge badge-success !bg-white/95 !backdrop-blur shadow-sm">{{ menu.type_repas }}</span>
+                </div>
+            </div>
+
+            <div class="p-8">
+                <div class="flex justify-between items-start mb-4">
+                    <h4 class="text-2xl font-black text-slate-900 tracking-tight">{{ menu.date_menu|format_date }}</h4>
+                    <div class="text-right">
+                        <span class="text-2xl font-black text-emerald-600 leading-none block">{{ "%.2f"|format(menu.prix) }}</span>
+                        <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">MRU</span>
+                    </div>
+                </div>
+                
+                <p class="text-slate-500 text-sm font-medium mb-8 line-clamp-2 h-10">
+                    {{ menu.description if menu.description else 'Une délicieuse expérience culinaire universitaire.' }}
+                </p>
+                
+                {% if is_conflict %}
+                <div class="w-full py-4 text-center bg-slate-100 rounded-2xl text-slate-400 font-black text-xs uppercase tracking-widest border border-slate-200">
+                    Déjà réservé
+                </div>
+                {% else %}
+                <form action="{{ url_for('book_meal', menu_id=menu.id_menu) }}" method="POST" class="space-y-4">
+                    <div class="flex gap-3">
+                        <select name="method" class="flex-grow input-fancy !py-3 !px-4 text-xs font-bold">
+                            <option value="online">💳 Paiement Mobile</option>
+                            <option value="on_site">💵 Espèces Guichet</option>
+                        </select>
+                        <button type="submit" class="btn-primary px-6 py-3 text-xs uppercase tracking-widest whitespace-nowrap">
+                            Réserver
+                        </button>
+                    </div>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

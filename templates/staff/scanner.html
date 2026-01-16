@@ -1,0 +1,90 @@
+
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-2xl mx-auto py-12">
+    <div class="text-center mb-12">
+        <h2 class="text-4xl font-black text-slate-900 tracking-tight leading-none">Scanner QR Code 📷</h2>
+        <p class="text-slate-500 font-bold mt-4 text-lg">Pointez la caméra vers le QR code de l'étudiant.</p>
+    </div>
+
+    <div class="bg-white p-6 rounded-[3rem] shadow-2xl border border-slate-100 overflow-hidden">
+        <div id="reader" class="rounded-[2rem] overflow-hidden border-4 border-indigo-100"></div>
+        
+        <div id="result" class="mt-8 hidden animate-entrance">
+            <div class="bg-emerald-50 border border-emerald-100 text-emerald-800 p-6 rounded-[2rem] flex items-center">
+                <div class="mr-4 bg-emerald-100 p-3 rounded-2xl">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                </div>
+                <div>
+                    <p class="font-black text-sm uppercase tracking-widest">Code détecté</p>
+                    <p id="scanned-code" class="text-2xl font-mono font-black"></p>
+                </div>
+            </div>
+            
+            <form action="{{ url_for('search_ticket') }}" method="POST" id="scan-form" class="mt-6">
+                <input type="hidden" name="ticket_code" id="hidden-ticket-code">
+                <button type="submit" class="w-full btn-primary py-5 rounded-2xl font-black text-lg">
+                    Consulter le profil étudiant
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="mt-12 text-center">
+        <a href="{{ url_for('dashboard') }}" class="text-slate-400 font-black hover:text-indigo-600 transition-colors uppercase tracking-widest text-xs">
+            Retourner au Dashboard
+        </a>
+    </div>
+</div>
+
+<script src="https://unpkg.com/html5-qrcode"></script>
+<script>
+    function onScanSuccess(decodedText, decodedResult) {
+        // Stopper le scanner après succès
+        html5QrcodeScanner.clear();
+        
+        // Afficher le résultat
+        document.getElementById('result').classList.remove('hidden');
+        document.getElementById('scanned-code').innerText = decodedText;
+        document.getElementById('hidden-ticket-code').value = decodedText;
+        
+        // Vibration si disponible
+        if (navigator.vibrate) navigator.vibrate(200);
+        
+        // Auto-submit après 1 seconde pour fluidité
+        setTimeout(() => {
+            document.getElementById('scan-form').submit();
+        }, 800);
+    }
+
+    function onScanFailure(error) {
+        // On ignore les erreurs de scan continu
+    }
+
+    let html5QrcodeScanner = new Html5QrcodeScanner(
+        "reader", 
+        { fps: 15, qrbox: {width: 280, height: 280} },
+        /* verbose= */ false
+    );
+    html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+</script>
+
+<style>
+    /* Personnalisation de l'UI de la lib scanner */
+    #reader { border: none !important; }
+    #reader__dashboard_section_csr button {
+        background-color: #4f46e5 !important;
+        color: white !important;
+        border-radius: 1rem !important;
+        padding: 0.75rem 1.5rem !important;
+        font-weight: 800 !important;
+        font-size: 0.75rem !important;
+        text-transform: uppercase !important;
+        border: none !important;
+        cursor: pointer !important;
+        margin: 10px 0 !important;
+    }
+    #reader__status_span { font-weight: 700 !important; font-size: 0.8rem !important; }
+    #reader video { border-radius: 2rem !important; }
+</style>
+{% endblock %}

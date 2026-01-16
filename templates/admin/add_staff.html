@@ -1,0 +1,64 @@
+
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-3xl mx-auto py-12">
+    <div class="mb-12 flex items-center justify-between">
+        <div class="animate-entrance">
+            <h2 class="text-4xl font-black text-slate-900 tracking-tight leading-none">Nouveau Staff 👨‍🍳</h2>
+            <p class="text-slate-500 font-bold mt-3 text-lg">Inscrire un nouveau membre dans l'équipe culinaire.</p>
+        </div>
+        <a href="{{ url_for('dashboard') }}" class="group bg-white border border-slate-200 px-6 py-3 rounded-2xl text-slate-400 hover:text-indigo-600 hover:border-indigo-100 font-black text-xs uppercase tracking-widest flex items-center transition-all shadow-sm">
+            <svg class="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+            Retour Dashboard
+        </a>
+    </div>
+
+    <div class="uniresto-card !p-12 lg:!p-16 shadow-2xl shadow-slate-200/50 border-none bg-white">
+        <div class="mb-10 text-center">
+            <div class="inline-flex p-4 bg-indigo-50 text-indigo-600 rounded-2xl mb-4">
+                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                </svg>
+            </div>
+            <p class="text-sm font-bold text-slate-400 uppercase tracking-widest">Formulaire d'enregistrement professionnel</p>
+        </div>
+
+        <form action="{{ url_for('add_staff_page') }}" method="POST" class="space-y-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="space-y-2">
+                    <label class="block text-[11px] font-black uppercase text-slate-400 ml-2 tracking-widest">Prénom</label>
+                    <input type="text" name="prenom" placeholder="Ex: Ahmed" required class="input-fancy w-full text-sm font-bold">
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-[11px] font-black uppercase text-slate-400 ml-2 tracking-widest">Nom</label>
+                    <input type="text" name="nom" placeholder="Ex: Ould Mohamed" required class="input-fancy w-full text-sm font-bold">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="space-y-2">
+                    <label class="block text-[11px] font-black uppercase text-slate-400 ml-2 tracking-widest">N° Matricule</label>
+                    <input type="text" name="matricule" placeholder="STF-2024-XXX" required class="input-fancy w-full text-sm font-mono font-bold">
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-[11px] font-black uppercase text-slate-400 ml-2 tracking-widest">Email Professionnel</label>
+                    <input type="email" name="email" placeholder="staff@uniresto.mr" required class="input-fancy w-full text-sm font-bold">
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <label class="block text-[11px] font-black uppercase text-slate-400 ml-2 tracking-widest">Mot de passe provisoire</label>
+                <div class="relative">
+                    <input type="password" name="password" placeholder="••••••••" required class="input-fancy w-full text-sm font-bold">
+                    <p class="text-[9px] text-slate-400 mt-2 ml-2 italic">L'utilisateur pourra modifier ce mot de passe ultérieurement.</p>
+                </div>
+            </div>
+            
+            <button type="submit" class="w-full btn-primary py-6 rounded-3xl font-black text-xl mt-4 shadow-xl shadow-indigo-100 flex items-center justify-center">
+                <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" /></svg>
+                Valider l'Inscription
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html lang="fr" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniResto - Excellence Universitaire 🇲🇷</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body { font-family: 'Outfit', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 flex flex-col h-full overflow-x-hidden">
+    {% if session['user_id'] %}
+    <nav class="glass-nav sticky top-0 z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-24">
+                <div class="flex items-center space-x-4 group cursor-pointer" onclick="window.location='/'">
+                    <div class="bg-slate-900 text-white p-3 rounded-2xl shadow-xl shadow-slate-200 transition-transform group-hover:rotate-12">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                    </div>
+                    <span class="text-3xl font-black tracking-tighter text-slate-900">UniResto<span class="text-indigo-600">.</span></span>
+                </div>
+                
+                <div class="flex items-center space-x-8">
+                    <div class="hidden md:flex flex-col items-end">
+                        <p class="text-sm font-black text-slate-900 leading-none">{{ session['user_name'] }}</p>
+                        <p class="text-[10px] uppercase font-black tracking-[0.2em] text-indigo-500 mt-2 opacity-60">{{ session['user_role'] }}</p>
+                    </div>
+                    <div class="h-10 w-px bg-slate-200 hidden md:block"></div>
+                    <a href="{{ url_for('logout') }}" class="btn-primary px-8 py-3 text-xs uppercase tracking-widest active:scale-95">
+                        Déconnexion
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    {% endif %}
+
+    <main class="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-10 md:py-20">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="space-y-4 mb-12 max-w-2xl mx-auto">
+            {% for category, message in messages %}
+              <div class="p-6 rounded-[1.5rem] border-2 flex items-center shadow-lg animate-entrance {% if category == 'success' %}bg-emerald-50 border-emerald-100 text-emerald-800{% elif category == 'danger' %}bg-rose-50 border-rose-100 text-rose-800{% else %}bg-indigo-50 border-indigo-100 text-indigo-800{% endif %}">
+                <div class="mr-5 p-3 rounded-xl {% if category == 'success' %}bg-emerald-100{% elif category == 'danger' %}bg-rose-100{% else %}bg-indigo-100{% endif %}">
+                    {% if category == 'success' %}
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    {% elif category == 'danger' %}
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    {% else %}
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    {% endif %}
+                </div>
+                <p class="font-black text-sm tracking-tight">{{ message }}</p>
+              </div>
+            {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        <div class="animate-entrance">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <footer class="bg-white border-t border-slate-100 py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col items-center justify-center space-y-10">
+                <div class="flex items-center space-x-4 opacity-20">
+                    <span class="text-3xl font-black tracking-tighter">UniResto</span>
+                    <span class="text-3xl">🇲🇷</span>
+                </div>
+                <div class="flex space-x-12 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">
+                    <a href="#" class="hover:text-indigo-600 transition-colors">Portail</a>
+                    <a href="#" class="hover:text-indigo-600 transition-colors">Support</a>
+                    <a href="#" class="hover:text-indigo-600 transition-colors">Mentions</a>
+                </div>
+                <p class="text-slate-300 text-xs font-bold">
+                    &copy; 2024 Réseau de Restauration Universitaire. Tous droits réservés.
+                </p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
