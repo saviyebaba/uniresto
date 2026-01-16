@@ -7,12 +7,30 @@ from models import db, Utilisateur, Menu, Reservation, Ticket
 from datetime import datetime
 from sqlalchemy import func
 from werkzeug.security import generate_password_hash
+from dotenv import load_dotenv
+
+# Charger les variables d'environnement depuis .env
+load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = 'uniresto_premium_secret_key'
+app.secret_key = os.environ.get('SECRET_KEY', 'uniresto_premium_secret_key')
 
-# Configuration BDD
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'mysql+pymysql://root:@localhost/uniresto_db')
+# Configuration BDD PostgreSQL
+# Utiliser DATABASE_URL si disponible, sinon construire à partir des variables individuelles
+from urllib.parse import quote_plus
+
+database_url = os.environ.get('DATABASE_URL')
+if not database_url:
+    db_host = os.environ.get('DB_HOST', 'localhost')
+    db_port = os.environ.get('DB_PORT', '5432')
+    db_name = os.environ.get('DB_NAME', 'uniresto_db')
+    db_user = os.environ.get('DB_USER', 'postgres')
+    db_password = os.environ.get('DB_PASSWORD', 'postgres')
+    # Encoder le mot de passe pour gérer les caractères spéciaux
+    encoded_password = quote_plus(db_password)
+    database_url = f'postgresql://{db_user}:{encoded_password}@{db_host}:{db_port}/{db_name}'
+
+app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
