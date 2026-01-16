@@ -9,7 +9,7 @@ from sqlalchemy import func
 from werkzeug.security import generate_password_hash
 from dotenv import load_dotenv
 
-# Charger les variables d'environnement depuis .env
+
 load_dotenv()
 
 app = Flask(__name__)
