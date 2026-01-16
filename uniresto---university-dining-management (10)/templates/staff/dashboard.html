@@ -1,0 +1,145 @@
+
+{% extends "base.html" %}
+{% block content %}
+<div class="space-y-10 animate-entrance">
+    <div class="flex justify-between items-end">
+        <div>
+            <h2 class="text-4xl font-black text-slate-900 tracking-tight">Console Staff 👨‍🍳</h2>
+            <p class="text-slate-500 font-bold mt-2 text-lg">Gestion culinaire et accès tickets.</p>
+        </div>
+    </div>
+
+    <!-- Zone de Vérification -->
+    <div class="max-w-3xl mx-auto">
+        <div class="uniresto-card overflow-hidden bg-slate-900 text-white border-none shadow-2xl">
+            <div class="p-8 lg:p-12">
+                <div class="flex flex-col md:flex-row gap-4 max-w-2xl mx-auto">
+                    <form action="{{ url_for('search_ticket') }}" method="POST" class="flex-grow flex space-x-2">
+                        <input type="text" name="ticket_code" required autofocus autocomplete="off" 
+                               placeholder="ENTREZ LE CODE..." 
+                               value="{{ found_ticket.code if found_ticket else '' }}"
+                               class="flex-grow bg-slate-800 border border-slate-700 p-5 rounded-2xl outline-none focus:ring-2 focus:ring-indigo-500 font-mono text-xl tracking-widest text-center uppercase text-indigo-400 shadow-inner">
+                        <button type="submit" class="btn-primary !py-4 px-8 rounded-2xl text-base">
+                            Vérifier
+                        </button>
+                    </form>
+                    
+                    <a href="{{ url_for('staff_scanner') }}" class="flex items-center justify-center bg-white/5 border border-white/10 text-white px-8 py-4 rounded-2xl font-bold hover:bg-white/10 transition-all text-sm">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                        Scanner
+                    </a>
+                </div>
+
+                {% if found_ticket %}
+                <div class="mt-10 bg-slate-800/50 rounded-3xl border border-slate-700 p-8 animate-entrance">
+                    <div class="flex flex-col md:flex-row justify-between items-center gap-8">
+                        <div class="flex items-center space-x-6">
+                            <div class="w-16 h-16 rounded-2xl bg-indigo-600 flex items-center justify-center font-black text-2xl text-white shadow-lg">
+                                {{ student.nom[0] }}
+                            </div>
+                            <div>
+                                <h4 class="text-2xl font-black text-white">{{ student.prenom }} {{ student.nom }}</h4>
+                                <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1">{{ student.matricule }}</p>
+                            </div>
+                        </div>
+                        <div class="text-center md:text-right">
+                            <p class="text-[10px] font-black text-emerald-400 uppercase tracking-widest mb-1">Repas Réservé</p>
+                            <h4 class="text-xl font-bold text-white">{{ menu.type_repas }}</h4>
+                            <p class="text-sm text-slate-400">{{ menu.date_menu|format_date }}</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-10 pt-8 border-t border-slate-700">
+                        {% if found_ticket.is_used %}
+                        <div class="w-full bg-rose-500/10 border border-rose-500/30 text-rose-500 p-6 rounded-2xl text-center">
+                            <p class="text-xl font-black uppercase tracking-tight">⚠️ TICKET DÉJÀ CONSOMMÉ</p>
+                        </div>
+                        {% else %}
+                        <form action="{{ url_for('consume_ticket', ticket_id=found_ticket.id_ticket) }}" method="POST" class="w-full">
+                            <button type="submit" class="w-full btn-primary !py-5 rounded-2xl font-black text-xl flex items-center justify-center space-x-3 shadow-indigo-900/40">
+                                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" /></svg>
+                                <span>Valider le Ticket</span>
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mt-16">
+        <!-- Formulaire Ajout -->
+        <div class="space-y-6">
+            <h3 class="text-2xl font-black text-slate-900">Nouveau Menu 🥘</h3>
+            <div class="uniresto-card p-8 bg-white">
+                <form action="{{ url_for('add_menu') }}" method="POST" class="space-y-5">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-2">
+                            <label class="text-[11px] font-black uppercase text-slate-400 ml-1">Date du service</label>
+                            <input type="date" name="date_menu" required class="input-fancy w-full font-bold">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-[11px] font-black uppercase text-slate-400 ml-1">Moment du repas</label>
+                            <select name="type_repas" class="input-fancy w-full font-bold">
+                                <option value="Déjeuner">🥘 Déjeuner</option>
+                                <option value="Dîner">🌙 Dîner</option>
+                                <option value="Petit-déjeuner">☕ Petit-déjeuner</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-2">
+                            <label class="text-[11px] font-black uppercase text-slate-400 ml-1">Prix unitaire (MRU)</label>
+                            <input type="number" step="0.01" name="prix" value="3.50" required class="input-fancy w-full font-bold">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-[11px] font-black uppercase text-slate-400 ml-1">Stock de plats</label>
+                            <input type="number" name="stock" value="100" required class="input-fancy w-full font-bold">
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[11px] font-black uppercase text-slate-400 ml-1">Image du plat (URL)</label>
+                        <input type="url" name="image_url" class="input-fancy w-full font-bold" placeholder="https://images.unsplash.com/...">
+                    </div>
+                    <button type="submit" class="w-full btn-primary !py-4 rounded-2xl font-black text-lg mt-4 shadow-xl">Publier le Menu</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Liste des Menus -->
+        <div class="space-y-6">
+            <h3 class="text-2xl font-black text-slate-900">Menus Récents</h3>
+            <div class="space-y-4">
+                {% for menu in menus %}
+                <div class="uniresto-card p-5 bg-white flex items-center justify-between hover:border-indigo-200 {% if not menu.is_active %}opacity-40 grayscale{% endif %}">
+                    <div class="flex items-center space-x-5">
+                        <div class="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center text-indigo-600 font-black relative overflow-hidden border border-slate-100 shadow-sm">
+                            {% if menu.image_url %}
+                            <img src="{{ menu.image_url }}" alt="Menu" class="w-full h-full object-cover">
+                            {% else %}
+                            <span class="text-xs uppercase">{{ menu.type_repas[0] }}</span>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <span class="text-[9px] font-black uppercase text-indigo-500 bg-indigo-50 px-2.5 py-1 rounded-full tracking-wider">{{ menu.type_repas }}</span>
+                            <h5 class="font-black text-slate-900 text-lg mt-1 tracking-tight">{{ menu.date_menu|format_date }}</h5>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center space-x-2">
+                        <a href="{{ url_for('toggle_menu', menu_id=menu.id_menu) }}" title="Activer/Désactiver" class="p-3 bg-slate-50 text-slate-400 hover:text-emerald-500 hover:bg-emerald-50 rounded-xl transition-all">
+                           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg>
+                        </a>
+                        <a href="{{ url_for('delete_menu', menu_id=menu.id_menu) }}" title="Supprimer" class="p-3 bg-slate-50 text-slate-300 hover:text-rose-500 hover:bg-rose-50 rounded-xl transition-all" onclick="return confirm('Supprimer définitivement ce menu ?')">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,106 @@
+
+{% extends "base.html" %}
+{% block content %}
+<div class="space-y-12">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-8">
+        <div class="max-w-2xl">
+            <h2 class="text-6xl font-black text-slate-900 tracking-tighter leading-none">Espace Admin<span class="text-indigo-600">.</span></h2>
+            <p class="text-slate-400 font-bold mt-4 text-xl">Pilotez la performance du restaurant universitaire en temps réel.</p>
+        </div>
+        <a href="{{ url_for('add_staff_page') }}" class="btn-primary px-10 py-5 flex items-center group">
+            <svg class="w-6 h-6 mr-3 group-hover:rotate-90 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4" /></svg>
+            Inscrire un Staff
+        </a>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="metric-container group">
+            <span class="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em]">Réservations Globales</span>
+            <div class="metric-value text-slate-900">{{ total_bookings }}</div>
+            <div class="mt-4 flex items-center text-xs font-bold text-slate-400">
+                <span class="w-2 h-2 bg-indigo-500 rounded-full mr-2 animate-pulse"></span> Données cumulées
+            </div>
+        </div>
+        
+        <div class="metric-container bg-slate-900 border-none shadow-2xl">
+            <span class="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Chiffre d'Affaires</span>
+            <div class="metric-value text-white">{{ "%.2f"|format(total_revenue) }} <span class="text-lg text-slate-500">MRU</span></div>
+            <div class="mt-4 text-xs font-black text-emerald-500 uppercase tracking-widest">Revenus confirmés</div>
+        </div>
+
+        <div class="metric-container">
+            <span class="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em]">Équipe Restaurant</span>
+            <div class="metric-value text-indigo-600">{{ users|length }}</div>
+            <div class="mt-4 text-xs font-bold text-slate-400">Comptes actifs</div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 mt-16">
+        <!-- Revenue List -->
+        <div class="space-y-8">
+            <h3 class="text-2xl font-black text-slate-900">Activité Quotidienne 📅</h3>
+            <div class="space-y-4">
+                {% for rev in daily_revenues %}
+                <div class="bg-white p-6 rounded-[2rem] border border-slate-100 flex items-center justify-between shadow-sm hover:border-emerald-200 transition-all">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-black">
+                            {{ rev.date_menu.strftime('%d') if rev.date_menu.strftime else '0' }}
+                        </div>
+                        <div>
+                            <p class="text-sm font-black text-slate-900 leading-none">{{ rev.date_menu|format_date }}</p>
+                            <p class="text-[10px] text-slate-400 font-bold uppercase mt-1">Recette validée</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-xl font-black text-emerald-600">{{ "%.2f"|format(rev.total) }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Staff List -->
+        <div class="lg:col-span-2 space-y-8">
+            <h3 class="text-2xl font-black text-slate-900">Annuaire du Personnel</h3>
+            <div class="bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-xl">
+                <table class="w-full">
+                    <thead class="bg-slate-50/50">
+                        <tr>
+                            <th class="px-8 py-6 text-left text-[10px] font-black uppercase text-slate-400 tracking-widest">Collaborateur</th>
+                            <th class="px-8 py-6 text-center text-[10px] font-black uppercase text-slate-400 tracking-widest">Matricule</th>
+                            <th class="px-8 py-6 text-right text-[10px] font-black uppercase text-slate-400 tracking-widest">Gestion</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-50">
+                        {% for user in users %}
+                        <tr class="hover:bg-slate-50/80 transition-colors">
+                            <td class="px-8 py-6">
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-black">
+                                        {{ user.nom[0] }}
+                                    </div>
+                                    <div>
+                                        <p class="font-bold text-slate-900">{{ user.prenom }} {{ user.nom }}</p>
+                                        <p class="text-xs text-slate-400">{{ user.email }}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-8 py-6 text-center font-mono text-sm font-bold text-slate-500">{{ user.matricule }}</td>
+                            <td class="px-8 py-6 text-right">
+                                <a href="{{ url_for('delete_user', user_id=user.id_utilisateur) }}" 
+                                   class="text-slate-300 hover:text-rose-600 transition-colors"
+                                   onclick="return confirm('Confirmer la suppression ?')">
+                                    <svg class="w-6 h-6 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

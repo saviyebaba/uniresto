@@ -1,0 +1,42 @@
+
+{% extends "base.html" %}
+{% block content %}
+<div class="flex items-center justify-center py-12 lg:py-24">
+    <div class="bg-white p-8 lg:p-12 rounded-[2.5rem] shadow-2xl shadow-indigo-100/50 border border-slate-100 max-w-md w-full animate-slide-up">
+        <div class="text-center mb-10">
+            <div class="inline-flex p-5 bg-indigo-50 text-indigo-600 rounded-[2rem] mb-8 ring-8 ring-indigo-50/50">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-4.514A11.042 11.042 0 0010 12.532m0 0a11.05 11.05 0 004.144-8.073V3.532M10 12.532a11.052 11.052 0 019.243-9.572M10 12.532a11.05 11.05 0 01-9.243-9.572M10 12.532V3.532" />
+                </svg>
+            </div>
+            <h1 class="text-3xl font-black text-slate-900 tracking-tight">Portail UniResto 🇲🇷</h1>
+            <p class="text-slate-400 font-semibold mt-2">Connectez-vous pour continuer</p>
+        </div>
+
+        <form method="POST" class="space-y-6">
+            <div class="space-y-2">
+                <label class="block text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Adresse Email</label>
+                <input type="email" name="email" required 
+                    class="w-full px-5 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-4 focus:ring-indigo-100 focus:bg-white outline-none transition-all font-medium placeholder:text-slate-300" 
+                    placeholder="votre@email.mr">
+            </div>
+            <div class="space-y-2">
+                <label class="block text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Mot de passe</label>
+                <input type="password" name="password" required 
+                    class="w-full px-5 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-4 focus:ring-indigo-100 focus:bg-white outline-none transition-all font-medium placeholder:text-slate-300" 
+                    placeholder="••••••••">
+            </div>
+            <button type="submit" class="w-full btn-primary py-5 rounded-2xl font-black text-lg tracking-tight shadow-xl shadow-indigo-200">
+                Se connecter
+            </button>
+        </form>
+
+        <div class="mt-12 text-center space-y-4">
+            <p class="text-sm text-slate-500 font-bold">Vous êtes étudiant ?</p>
+            <a href="{{ url_for('register') }}" class="inline-block text-indigo-600 font-black hover:text-indigo-800 transition-colors uppercase tracking-widest text-xs border-b-2 border-indigo-100 pb-1">
+                Créer un compte maintenant
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

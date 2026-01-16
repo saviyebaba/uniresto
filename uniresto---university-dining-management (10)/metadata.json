@@ -1,0 +1,8 @@
+
+{
+  "name": "UniResto - University Dining Management",
+  "description": "A comprehensive university restaurant management platform for students to book meals, staff to manage menus and validate tickets, and administrators to oversee operations and statistics.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
